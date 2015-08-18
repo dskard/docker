@@ -1,0 +1,8 @@
+
+shutdown and rebuild presentation_template:
+
+sudo docker ps -a
+export CID=e5a2884c674c; sudo docker stop ${CID}; sudo docker rm ${CID}; make presentation_template; make presentation1
+
+viewing the presentation:
+open up chrome and navigate to localhost:8000

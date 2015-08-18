@@ -1,0 +1,84 @@
+set nocompatible
+syntax on
+" tab multible lines at once
+map t ma>'t'a
+map T ma<'t'a
+
+" rewrap a paragraph or a program comment
+map <F5> gqap
+
+" quickly switch buffers
+map <F6> :b#<CR>
+
+" convert to binary
+map <F7> :%!xxd<CR>
+map <F8> :%!xxd -r<CR>
+
+" convert to binary
+map <F9> <Esc>:!aspell -c --dont-backup "%"<CR>:e! "%"<CR><CR>
+
+" backspace and delete stuff
+"noremap Bs Del
+"noremap Del Bs
+"noremap!Bs Del
+"noremap!Del Bs
+set bs=2
+
+runtime macros/matchit.vim
+
+set autoindent
+set ruler
+
+"indent with four spaces when hitting tab
+set shiftwidth=4
+set tabstop=4
+
+"expand all tabs to spaces according to shiftwidth parameter
+set expandtab
+
+set rulerformat=%40(%m%r%=%l,%c%V,0x%B,%o\ %P%)
+
+" open new vsplit buffers to the right of the current buffer
+set splitright
+
+" open new split buffers below the current buffer
+set splitbelow
+
+set viminfo=""
+
+"enable filetype detection:
+filetype on
+
+filetype plugin on
+
+"for C-like programming:
+autocmd FileType c,cpp,cc,py,tcl,tk,pl,m,sh,rs set shiftwidth=4 tabstop=4
+
+"for tex programming:
+autocmd FileType tex set shiftwidth=2 tabstop=2
+
+" makefile syntax
+au FileType make setlocal noexpandtab
+
+" swig syntax
+au BufEnter *.i exe "set syntax=c"
+
+" procmail syntax
+au BufEnter .procmailrc exe "set syntax=sh"
+
+" rust syntax
+au BufNewFile,BufRead *.rs set filetype=rust
+
+
+"set list listchars=tab:»·,trail:·
+set list listchars=tab:>-,trail:-
+
+set background=dark
+if version > 580
+    " no guarantees for version 5.8 and below, but this makes it stop
+    " complaining
+    hi clear
+    if exists("syntax_on")
+    syntax reset
+    endif
+endif

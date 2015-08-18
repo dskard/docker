@@ -1,0 +1,18 @@
+# launch the R shiny application
+
+R -q -e "library(shiny); runApp(\"shiny/helloshiny\")" &
+
+
+
+# this starts up a server on localhost. a port number is returned
+
+> library(shiny); runApp("shiny/helloshiny")
+
+Listening on http://127.0.0.1:3866
+
+
+
+# grab the port number and launch the firefox browser
+# with a temporary minimal profile
+
+./launch_ff.sh http://127.0.0.1:3866

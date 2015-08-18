@@ -1,0 +1,14 @@
+--- py/selenium/webdriver/remote/webelement.py	2012-10-09 12:44:21.000000000 -0400
++++ py/selenium/webdriver/remote/new_webelement.py	2012-10-09 12:42:20.000000000 -0400
+@@ -257,6 +257,11 @@
+         if file_path is '':
+             return None
+ 
++        # added by dsk
++        # https://code.google.com/p/selenium/issues/detail?id=3871
++        if isinstance(file_path, unicode):
++            file_path = file_path.encode('utf-8')
++
+         if os.path.exists(file_path):
+             return file_path
+         else:

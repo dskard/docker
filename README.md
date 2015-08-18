@@ -1,2 +1,2 @@
 # docker
-docker scripts for building software
+scripts for building software in docker containers

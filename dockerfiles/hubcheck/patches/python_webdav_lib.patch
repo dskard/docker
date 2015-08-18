@@ -1,0 +1,26 @@
+diff -rupN Python_WebDAV_Library-0.4.2/src/webdav/logger.py Python_WebDAV_Library-0.4.2_fixed_logging/src/webdav/logger.py
+--- Python_WebDAV_Library-0.4.2/src/webdav/logger.py	2013-07-24 16:45:58.000000000 -0400
++++ Python_WebDAV_Library-0.4.2_fixed_logging/src/webdav/logger.py	2013-07-24 16:45:34.000000000 -0400
+@@ -39,13 +39,13 @@ def getDefaultLogger(handler=None):
+     """
+     
+     myLogger = logging.getLogger(_defaultLoggerName)
+-    if len(myLogger.handlers) == 0: 
+-        myLogger.level = logging.DEBUG
+-        formatter = logging.Formatter(_fileLogFormat)
+-        if handler is None:
+-            stdoutHandler = logging.StreamHandler(sys.stdout)
+-            stdoutHandler.setFormatter(formatter)
+-            myLogger.addHandler(stdoutHandler)
+-        else:
+-            myLogger.addHandler(handler)
++#    if len(myLogger.handlers) == 0: 
++#        myLogger.level = logging.DEBUG
++#        formatter = logging.Formatter(_fileLogFormat)
++#        if handler is None:
++#            stdoutHandler = logging.StreamHandler(sys.stdout)
++#            stdoutHandler.setFormatter(formatter)
++#            myLogger.addHandler(stdoutHandler)
++#        else:
++#            myLogger.addHandler(handler)
+     return myLogger

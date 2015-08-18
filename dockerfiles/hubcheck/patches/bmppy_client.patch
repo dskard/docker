@@ -1,0 +1,48 @@
+diff -rupN browsermob-proxy-0.5.0.original/browsermobproxy/client.py browsermob-proxy-0.5.0/browsermobproxy/client.py
+--- browsermob-proxy-0.5.0.original/browsermobproxy/client.py	2013-10-10 13:04:23.000000000 -0400
++++ browsermob-proxy-0.5.0/browsermobproxy/client.py	2013-10-10 15:09:19.000000000 -0400
+@@ -3,14 +3,14 @@ from urllib import urlencode
+ import json
+ 
+ class Client(object):
+-    def __init__(self, url):
++    def __init__(self, url, options={}):
+         """
+         Initialises a new Client object
+         :Args:
+          - url: This is where the BrowserMob Proxy lives
+         """
+         self.host = "http://" + url
+-        resp = requests.post('%s/proxy' % self.host, urlencode(''))
++        resp = requests.post('%s/proxy' % self.host, data=options)
+         jcontent = json.loads(resp.content)
+         self.port = jcontent['port']
+         url_parts = self.host.split(":")
+@@ -48,7 +48,8 @@ class Client(object):
+         BrowserMob proxy information
+         """
+         capabilities['proxy'] = {'proxyType': "MANUAL",
+-                                 'httpProxy': self.proxy}
++                                 'httpProxy': self.proxy,
++                                 'sslProxy': self.proxy,}
+ 
+     def add_to_webdriver_capabilities(self, capabilities):
+         self.add_to_capabilities(capabilities)
+diff -rupN browsermob-proxy-0.5.0.original/browsermobproxy/server.py browsermob-proxy-0.5.0/browsermobproxy/server.py
+--- browsermob-proxy-0.5.0.original/browsermobproxy/server.py	2013-10-10 13:04:23.000000000 -0400
++++ browsermob-proxy-0.5.0/browsermobproxy/server.py	2013-10-10 15:09:34.000000000 -0400
+@@ -78,12 +78,12 @@ class Server(object):
+         """
+         return "http://localhost:%d" % self.port
+ 
+-    def create_proxy(self):
++    def create_proxy(self,options={}):
+         """
+         Gets a client class that allow to set all the proxy details that you
+         may need to.
+         """
+-        client = Client(self.url[7:])
++        client = Client(self.url[7:],options)
+         return client
+ 
+     def _is_listening(self):
