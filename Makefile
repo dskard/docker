@@ -11,6 +11,9 @@ presentation_template:
 anaconda_template:
 	sudo docker build -t="$@" ../github/anaconda-notebook
 
+notebook_template:
+	sudo docker build -t="$@" dockerfiles/anaconda
+
 sshd_template:
 	sudo docker build -t="$@" dockerfiles/sshd
 
@@ -25,6 +28,9 @@ rappture-r9_template:
 
 hubcheck_template:
 	sudo docker build -t="$@" dockerfiles/hubcheck
+
+hubcheck-dev_template:
+	sudo docker build -t="$@" dockerfiles/hubcheck-dev
 
 rust_template:
 	sudo docker build -t="$@" dockerfiles/rust
@@ -46,12 +52,25 @@ presentation1:
 	  presentation_template
 
 anaconda:
-	sudo docker run -i -t -d
+	sudo docker run -i -t -d \
 	  -p 8888:8888 \
 	  -v ${PWD}../github/anaconda_notebook/src/notebooks:/home/condauser/notebooks \
 	  --name $@
 	  anaconda-notebook \
 	  /home/condauser/anaconda3/bin/ipython notebook
+
+notebook:
+	sudo docker stop $@ || true
+	sudo docker rm $@ || true
+	ssh-keygen -f "${HOME}/.ssh/known_hosts" -R [localhost]:4026
+	sudo docker run -i -t -d \
+	  -p 4026:22 \
+	  -e DISPLAY=${DISPLAY} \
+	  -v /tmp/.X11-unix:/tmp/.X11-unix \
+	  -v ${PWD}/data/notebooks:/home/guest/notebooks \
+	  --name $@ \
+	  $@_template \
+	  sh -c "/opt/conda/bin/jupyter notebook --ip=*"
 
 sshd:
 	sudo docker stop $@ || true
@@ -95,6 +114,19 @@ hubcheck:
 	ssh-keygen -f "${HOME}/.ssh/known_hosts" -R [localhost]:4024
 	sudo docker run -i -t -d \
 	  -p 4024:22 \
+	  --name $@ \
+	  $@_template
+
+hubcheck-dev:
+	sudo docker stop $@ || true
+	sudo docker rm $@ || true
+	ssh-keygen -f "${HOME}/.ssh/known_hosts" -R [localhost]:4027
+	sudo docker run -i -t -d \
+	  -v ${PWD}data/hubcheck:/home/guest/hubcheck \
+	  -v ${PWD}data/hubcheck-hubzero-locators:/home/guest/hubcheck-hubzero-locators \
+	  -v ${PWD}data/hubcheck-hubzero-tests:/home/guest/hubcheck-hubzero-tests \
+	  -v /tmp/.X11-unix:/tmp/.X11-unix \
+	  -p 4027:22 \
 	  --name $@ \
 	  $@_template
 
