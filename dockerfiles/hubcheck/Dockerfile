@@ -153,9 +153,6 @@ RUN \
 # browsermob-proxy   browsermob-proxy bindings
 #
 
-RUN aptitude -q -q -y install \
-    python-pip
-
 RUN \
     set -e; \
     set -x; \
@@ -210,12 +207,22 @@ RUN chmod -R 644 /tmp/testdata/*;
 
 # copy hubcheck code into the container template
 # build hubcheck
+# build hubcheck-hubzero-locators
+# build hubcheck-hubzero-tests
 RUN \
     set -e; \
     set -x; \
     \
     git clone https://github.com/codedsk/hubcheck.git /tmp/hubcheck; \
     cd /tmp/hubcheck; \
+    python setup.py install; \
+    \
+    git clone https://github.com/codedsk/hubcheck-hubzero-locators.git /tmp/hubcheck-hubzero-locators; \
+    cd /tmp/hubcheck-hubzero-locators; \
+    python setup.py install; \
+    \
+    git clone https://github.com/codedsk/hubcheck-hubzero-tests.git /tmp/hubcheck-hubzero-tests; \
+    cd /tmp/hubcheck-hubzero-tests; \
     python setup.py install;
 
 
