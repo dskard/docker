@@ -38,6 +38,8 @@ rust_template:
 shiny_template:
 	sudo docker build -t="$@" dockerfiles/shiny
 
+rstudio-1.0.143_template:
+	sudo docker build -t="$@" dockerfiles/rstudio-1.0.143
 
 
 # CONTAINERS
@@ -83,7 +85,10 @@ sshd:
 firefox:
 	sudo docker run -i -t --rm \
 	  -e DISPLAY=${DISPLAY} \
+	  -e XAUTHORITY=/tmp/.docker.xauth \
 	  -v /tmp/.X11-unix:/tmp/.X11-unix \
+	  -v /tmp/.docker.xauth:/tmp/.docker.xauth \
+	  -v /run/user/$(shell id -u)/pulse:/run/pulse \
 	  $@_template
 
 rappture:
@@ -150,3 +155,13 @@ shiny:
 	  --name $@ \
 	  $@_template
 
+rstudio-1.0.143:
+	sudo docker stop $@ || true
+	sudo docker rm $@ || true
+	ssh-keygen -f "${HOME}/.ssh/known_hosts" -R [localhost]:4029
+	sudo docker run -i -t -d \
+	  -v ${PWD}data/R:/home/guest/R \
+	  -v /tmp/.X11-unix:/tmp/.X11-unix \
+	  -p 4029:22 \
+	  --name $@ \
+	  $@_template
